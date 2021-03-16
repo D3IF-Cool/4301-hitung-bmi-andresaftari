@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import org.d3if3049.hitungbmi.R
+import org.d3if3049.hitungbmi.data.KategoriBmi
 import org.d3if3049.hitungbmi.databinding.FragmentHitungBinding
 
 class HitungFragment : Fragment() {
@@ -68,16 +69,23 @@ class HitungFragment : Fragment() {
     }
 
     private fun getKategori(bmi: Float, isMale: Boolean): String {
-        val stringRes = if (isMale) when {
-            bmi < 20.5 -> R.string.kurus
-            bmi >= 27.0 -> R.string.gemuk
-            else -> R.string.ideal
+        val kategoriBmi = if (isMale) when {
+            bmi < 20.5 -> KategoriBmi.KURUS
+            bmi >= 27.0 -> KategoriBmi.GEMUK
+            else -> KategoriBmi.IDEAL
         }
         else when {
-            bmi < 18.5 -> R.string.kurus
-            bmi >= 25.0 -> R.string.gemuk
-            else -> R.string.ideal
+            bmi < 18.5 -> KategoriBmi.KURUS
+            bmi >= 25.0 -> KategoriBmi.GEMUK
+            else -> KategoriBmi.IDEAL
         }
+
+        val stringRes = when (kategoriBmi) {
+            KategoriBmi.GEMUK -> R.string.gemuk
+            KategoriBmi.IDEAL -> R.string.ideal
+            KategoriBmi.KURUS -> R.string.kurus
+        }
+
         return getString(stringRes)
     }
 
