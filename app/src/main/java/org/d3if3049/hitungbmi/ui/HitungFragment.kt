@@ -29,7 +29,7 @@ class HitungFragment : Fragment() {
                     R.id.action_hitungFragment_to_saranFragment
                 )
             }
-            shareButton.setOnClickListener { }
+            shareButton.setOnClickListener { shareData() }
         }
         setHasOptionsMenu(true)
         return binding.root
