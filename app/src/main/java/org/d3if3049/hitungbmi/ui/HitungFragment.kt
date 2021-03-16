@@ -1,14 +1,14 @@
 package org.d3if3049.hitungbmi.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import org.d3if3049.hitungbmi.R
 import org.d3if3049.hitungbmi.data.KategoriBmi
 import org.d3if3049.hitungbmi.databinding.FragmentHitungBinding
@@ -29,8 +29,45 @@ class HitungFragment : Fragment() {
                     R.id.action_hitungFragment_to_saranFragment
                 )
             }
+            shareButton.setOnClickListener { }
         }
+        setHasOptionsMenu(true)
         return binding.root
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_about) {
+            findNavController().navigate(R.id.action_hitungFragment_to_aboutFragment)
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.option_menu, menu)
+    }
+
+    private fun shareData() {
+        val selectedId = binding.rgGender.checkedRadioButtonId
+        val gender = if (selectedId == R.id.rb_pria) getString(R.string.pria)
+        else getString(R.string.wanita)
+
+        val message = getString(
+            R.string.bagikan_template,
+            binding.edtBerat.text,
+            binding.edtTinggi.text,
+            gender,
+            binding.bmiTextView.text,
+            binding.kategoriTextView.text
+        )
+
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.setType("text/plain").putExtra(Intent.EXTRA_TEXT, message)
+
+        if (shareIntent.resolveActivity(requireActivity().packageManager) != null) {
+            startActivity(shareIntent)
+        }
     }
 
     private fun hitungBmi() {
@@ -62,7 +99,7 @@ class HitungFragment : Fragment() {
         with(binding) {
             bmiTextView.text = getString(R.string.bmi_x, bmi)
             kategoriTextView.text = getString(R.string.kategori_x, kategori)
-            btnSaran.visibility = View.VISIBLE
+            rgGender.visibility = View.VISIBLE
         }
 
         Log.d(CALCULATION_TAG, "$bmi, $kategori")
